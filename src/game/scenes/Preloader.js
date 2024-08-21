@@ -1,6 +1,8 @@
 import { Scene } from 'phaser';
-import { actors } from '../../data/data';
 import { animationsMainCharacter } from '../animationsMainCharacter';
+import { loadCharacters } from './utils/loadCharacters';
+import { loadBackgrounds } from './utils/loadBackgrounds';
+import { centerBackground } from '../centerBackgrounds';
 
 export class Preloader extends Scene {
     constructor() {
@@ -8,22 +10,19 @@ export class Preloader extends Scene {
     }
 
     init() {
-        //  We loaded this image in our Boot Scene, so we can display it here
-        this.add.image(512, 384, 'background');
+       // Cargar y centrar la imagen de fondo
+    centerBackground(this, 'background');
 
-        //  A simple progress bar. This is the outline of the bar.
-        this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
+    // Crear un contorno para la barra de progreso (centrada en la pantalla)
+    this.add.rectangle(300, 380, 500, 32).setStrokeStyle(1, 0xffffff);
 
-        //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-        const bar = this.add.rectangle(512 - 230, 384, 4, 28, 0xffffff);
+    // Crear la barra de progreso
+    const bar = this.add.rectangle(50, 380, 10, 28, 0xffffff);
 
-        //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
-        this.load.on('progress', (progress) => {
-
-            //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
-            bar.width = 4 + (460 * progress);
-
-        });
+    // Actualizar la barra de progreso según el porcentaje de carga
+    this.load.on('progress', (progress) => {
+        bar.width = 10 + (480 * progress); // Ajustar el ancho de la barra según el progreso
+    });
     }
 
     preload() {
@@ -31,28 +30,21 @@ export class Preloader extends Scene {
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
 
+
+
+        // LOAD CHARACTERS
+        loadCharacters(this)
+
+
+        // LOAD BACKGROUNDS
+        loadBackgrounds(this)
+
+
         // Objects
         this.load.image('car', 'objects/car.png')
-
-
-        this.load.spritesheet(actors.primer_ciego.name, 'characters/man-black.png',{
-                frameWidth: 62, frameHeight: 61,
-            })
-        this.load.spritesheet(actors.esposa_del_primer_ciego.name, 'characters/girl.png',{
-                frameWidth: 30, frameHeight: 30,
-            })
-
-        // Cargando los assets
-        this.load.spritesheet('people', 'characters/main.png', {
-            frameWidth: 48, frameHeight: 48
-
-        })
         // floor 
         this.load.image('floor', 'grounds/ground_2.png')
 
-        // background
-        this.load.image('background-2', 'scenes/house-internal.png')
-        this.load.image('background-3', 'scenes/medical-house.jpg')
 
         // Music
         this.load.audio('inicio', 'music/inicio.mp3')
@@ -68,6 +60,6 @@ export class Preloader extends Scene {
         this.scene.start('MainMenu');
 
     }
-    
+
 
 }
