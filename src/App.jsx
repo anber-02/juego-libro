@@ -63,7 +63,7 @@ function App() {
                 </p>
                 <h2 className="text-lg font-bold mt-2">Instrucciones</h2>
                 <p>El jugador se mueve de izquierda a derecha, encontrando personajes principales que presentan diálogos significativos
-                    A medida que avanzas en el juego, debes realizar acciones específicas, como saltar o alcanzar puntos clave, para desbloquear nuevos eventos y progresar en la narrativa. Por ejemplo, al llegar al primer ciego en un semáforo, deberás interactuar con un coche para desencadenar el diálogo: "No puedo avanzar, me he quedado ciego." Realiza estas acciones para continuar avanzando en la historia y descubrir cómo se desarrolla la trama.</p>
+                    A medida que avanzas en el juego, debes realizar acciones específicas, como saltar o alcanzar puntos clave, para desbloquear nuevos eventos y progresar en la narrativa...</p>
 
 
             </div>
