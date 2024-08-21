@@ -114,7 +114,7 @@ export class MainMenu extends Scene {
 
             // Mostrar el cuadro de diálogo y el texto
             this.dialogueBox.setVisible(true);
-            this.dialogueText.setText('Encontraste el carro, vamos a mi casa');
+            this.dialogueText.setText('Encontraste el carro, continuemos, A mi casa!');
             this.dialogueText.setVisible(true);
 
             // Mostrar los personajes en el cuadro de diálogo
@@ -249,13 +249,13 @@ export class MainMenu extends Scene {
     showGameNarrator(scene) {
         this.instructionBox = this.add.graphics();
         this.instructionBox.fillStyle(0x000000, 0.7); // Color negro con 70% de opacidad
-        this.instructionBox.fillRect(50, 20, 500, 50); // Cuadro de instrucciones en la parte superior
+        this.instructionBox.fillRect(50, 30, 500, 80); // Cuadro de instrucciones en la parte superior
 
         const dialogs = narratorDialogues.find(narrator => narrator.scene === scene);
 
         this.instructionText = this.add.text(60, 30, dialogs.dialogues[0], {
             fontFamily: 'Arial',
-            fontSize: 14,
+            fontSize: 18,
             color: '#ffffff',
             wordWrap: { width: 480, useAdvancedWrap: true }
         });

@@ -4,6 +4,18 @@ export const narratorDialogues = [
         "dialogues": ["El mundo que conocíamos se ha desvanecido. Una ceguera blanca se extiende como una plaga, sumiendo a todos en la oscuridad.", "La primera victima de la ceguera aparece"]
     },
     {
+        "scene": "Casa-ciego",
+        "dialogues": ["El señor llega a su casa y sorprende a su mujer al decirle lo siguiente"]
+    },
+    {
+        "scene": "Consultorio",
+        "dialogues": [
+            "El doctor observa con atención al paciente, su mirada cargada de preocupación.",
+            "En ese momento, el médico se da cuenta de que esta ceguera no es como cualquier otra.",
+            "Mientras examina los ojos del paciente, el doctor siente una extraña inquietud, como si un mal invisible estuviera al acecho."
+        ]
+    },
+    {
         "scene": "Ceguera se propaga",
         "dialogue": "Sin previo aviso, la ceguera se apoderó de todos, dejando a la humanidad a merced de sus más oscuros instintos."
     },

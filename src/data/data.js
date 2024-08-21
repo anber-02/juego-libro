@@ -69,6 +69,13 @@ export const dialogues = [
                 ]
             },
             {
+                "scene": scenes.en_casa_despues_de_la_ceguera.name, // "en-casa-despues-de-la-ceguera"
+                "dialogues": [
+                    "Amor!, Estoy Ciego. No Veo Nada",
+                    "Gracias amor, siempre cuento contigo",
+                ]
+            },
+            {
                 "scene": scenes.consultorio_del_oftalmologo.name, // "consultorio-del-oftalmologo"
                 "dialogues": [
                     "No hay nada que pueda ver, doctor. Es como si estuviera atrapado en una nube blanca."
@@ -82,7 +89,8 @@ export const dialogues = [
             {
                 "scene": scenes.en_casa_despues_de_la_ceguera.name, // "en-casa-despues-de-la-ceguera"
                 "dialogues": [
-                    "Tranquilo, todo va a estar bien. Te llevaré a casa, no te preocupes."
+                    "Tranquilo, todo va a estar bien. Te llevaré al doctor, no te preocupes.",
+                    "En Las Buenas Y la Malas BB."
                 ]
             },
             {

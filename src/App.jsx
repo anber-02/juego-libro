@@ -56,7 +56,7 @@ function App() {
             )}
 
             {/* Descripción del juego */}
-            <div className="mt-4 bg-slate-800 p-4 rounded-md shadow-md">
+            <div className="mt-4 w-2/3 mx-auto bg-slate-800 p-4 rounded-md shadow-md">
                 <h2 className="text-lg font-bold mb-2">Descripción del Juego</h2>
                 <p>
                     Este juego está basado en la obra <i>"Ensayo sobre la ceguera"</i> de José Saramago. Su objetivo es representar y enseñar cómo se desarrolla la historia del libro a través de la interacción con principal que sera el usuario que este interactuando con el juego.

@@ -1,7 +1,8 @@
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
-import { dialogues } from '../../data/data';
+import { actors, dialogues as dataDialogues } from '../../data/data';
 import { centerBackground } from '../centerBackgrounds';
+import { narratorDialogues } from '../../data/narrador';
 
 export class CasaPrimerCiego extends Scene {
 
@@ -9,16 +10,20 @@ export class CasaPrimerCiego extends Scene {
         super('CasaPrimerCiego');
     }
 
-
-    
     create() {
+        this.currentScene = 'en-casa-despues-de-la-ceguera';
         // Cargar la imagen de fondo
-        centerBackground(this, 'background-2')
+        centerBackground(this, 'background-2');
+
+        this.floor = this.add.tileSprite(0, 400 - 32, 600, 32, 'floor');
+        this.floor.setOrigin(0, 0);
+        this.showGameNarrator("Casa-ciego");
+
 
         // Crear el cuadro de diálogo en la parte inferior
         this.dialogueBox = this.add.graphics();
-        this.dialogueBox.fillStyle(0x000000, 0.7); // Color negro con 70% de opacidad
-        this.dialogueBox.fillRect(50, 320, 500, 100); // Cuadro de diálogo en la parte inferior
+        this.dialogueBox.fillStyle(0x000000, 0.7);
+        this.dialogueBox.fillRect(50, 320, 500, 100);
 
         // Crear texto para el diálogo
         this.dialogueText = this.add.text(120, 330, '', {
@@ -28,121 +33,189 @@ export class CasaPrimerCiego extends Scene {
             wordWrap: { width: 360, useAdvancedWrap: true }
         });
 
-        // Sprite del personaje principal a la izquierda del cuadro de diálogo
-        this.mainCharacterSprite = this.add.sprite(60, 350, 'people', 0).setOrigin(0.5).setScale(1.5);
-
-        // Sprite del personaje colisionado a la derecha del cuadro de diálogo
-        this.dialogueCharacter = this.add.sprite(470, 350, 'primer-ciego', 2).setOrigin(0.5).setScale(1.5);
-
-        // Botón de "Continuar"
-        this.continueButton = this.add.text(500, 360, 'Continuar', {
-            fontFamily: 'Arial',
-            fontSize: 12,
-            color: '#00ff00',
-            backgroundColor: '#000000',
-            padding: { left: 10, right: 10, top: 5, bottom: 5 },
-            align: 'center'
-        }).setInteractive().on('pointerdown', () => {
-            this.hideDialogue();
-        });
+        // Personajes para el diálogo
+        this.dialogueCharacterLeft = this.add.sprite(60, 350, null).setOrigin(0.5).setScale(1.5);
+        this.dialogueCharacterRight = this.add.sprite(490, 350, null).setOrigin(0.5).setScale(1.5);
 
         // Ocultar todo inicialmente
         this.dialogueBox.setVisible(false);
         this.dialogueText.setVisible(false);
-        this.mainCharacterSprite.setVisible(false);
-        this.dialogueCharacter.setVisible(false);
-        this.continueButton.setVisible(false);
+        this.dialogueCharacterLeft.setVisible(false);
+        this.dialogueCharacterRight.setVisible(false);
 
 
-
-
-        // Crear un TileSprite para el suelo
-        // this.floor = this.add.tileSprite(0, 400 - 32, 600, 32, 'floor');
-        // this.floor.setOrigin(0, 0);
-        // // Hacer que el suelo sea estático y colisionable
-        // this.physics.add.existing(this.floor, true);
-
-        this.characters = []
+        // Inicializar los personajes con los que se puede interactuar
+        this.characters = [];
         this.characters.push(
-            this.physics.add.sprite(400, 200, 'primer-ciego', 2).setName('Primer Ciego')
-        )
-        //Cargar la img con physics
-        this.people = this.physics.add.sprite(100, 100, 'people')
-            .setOrigin(0, 1)
-            .setGravity(0)
-            .setCollideWorldBounds(true) // -> para que no salga del borde del juego
+            this.add.sprite(this.scale.width / 2, this.scale.height / 2, actors.primer_ciego.name, 2).setName(actors.primer_ciego.name),
+            this.add.sprite(this.scale.width / 2 + 30, this.scale.height / 2, actors.esposa_del_primer_ciego.name).setName(actors.esposa_del_primer_ciego.name).setScale(1)
+        );
 
+
+
+
+        //Agregando colisiones entre los personajes y el principal    
         this.characters.forEach(character => {
-            this.physics.add.collider(this.people, character, this.triggerDialogue, null, this)
-            this.physics.add.collider(character, this.floor)
-        })
-
-        this.physics.add.collider(this.people, this.floor)
+            this.physics.add.collider(this.floor, character);
+        });
 
 
-        this.cursors = this.input.keyboard.createCursorKeys()
+
+        this.cursors = this.input.keyboard.createCursorKeys();
 
         EventBus.emit('current-scene-ready', this);
+
+
     }
 
-    changeScene() {
-        this.scene.start('Game');
-    }
+
+    endDialogue() {
+        // Mostrar nuevamente los personajes y reactivar la entrada del jugador
+        this.characters.forEach(character => character.setVisible(true));
+        this.cursors.left.enabled = true;
+        this.cursors.right.enabled = true;
+        this.cursors.up.enabled = true;
+        this.cursors.down.enabled = true;
 
 
-    update() {
-        // Movimiento en el eje X
-        if (this.cursors.left.isDown) {
-            this.people.x -= 2;
-            this.people.anims.play('people-walk-left', true); // Animación para caminar a la izquierda
-        } else if (this.cursors.right.isDown) {
-            this.people.x += 2;
-            this.people.anims.play('people-walk-right', true); // Animación para caminar a la derecha
-        }
+        this.dialogueCharacterLeft.setVisible(false);
+        this.dialogueCharacterRight.setVisible(false);
 
-        // Movimiento en el eje Y
-        if (this.cursors.up.isDown) {
-            this.people.y -= 2;
-            this.people.anims.play('people-walk-up', true); // Animación para caminar hacia arriba
-        } else if (this.cursors.down.isDown) {
-            this.people.y += 2;
-            this.people.anims.play('people-walk-down', true); // Animación para caminar hacia abajo
-        }
-
-        // Si no se presionan teclas, detener la animación
-        if (!this.cursors.left.isDown && !this.cursors.right.isDown && !this.cursors.up.isDown && !this.cursors.down.isDown) {
-            this.people.anims.stop();
-        }
-    }
-
-    triggerDialogue(mainCharacter, character) {
-        // Encontrar el diálogo del personaje colisionado
-        const dialogueData = dialogues.find(dialogue => dialogue.actor === character.name);
-
-        if (dialogueData) {
-            // Renderizar o mostrar el diálogo en la interfaz de React
-            EventBus.emit('show-dialogue', dialogueData)
-            // this.showDialogue(dialogueData.messagesOrDialogues[0].dialogue);
-            // this.showDialogue(dialogueData.messagesOrDialogues[0].dialogue, character.texture.key);
-            this.showDialogue(dialogueData);
-        }
-    }
-
-    showDialogue(dialogueData) {
-        this.dialogueText.setText(dialogueData.messagesOrDialogues[0].dialogue);
-        this.dialogueBox.setVisible(true);
-        this.dialogueText.setVisible(true);
-        // this.mainCharacterSprite.setVisible(true);
-        this.dialogueCharacter.setVisible(true);
-        this.continueButton.setVisible(true);
-    }
-
-    hideDialogue() {
         this.dialogueBox.setVisible(false);
         this.dialogueText.setVisible(false);
-        this.mainCharacterSprite.setVisible(false);
-        this.dialogueCharacter.setVisible(false);
-        this.continueButton.setVisible(false);
+        this.currentDialogueIndex = 0;
+        this.currentResponseIndex = 0;
+        this.dialogueInProgress = false; // Permite que un nuevo diálogo pueda ser iniciado
+
+
+
+        // Mostrar el cuadro de diálogo y el texto
+        this.dialogueBox.setVisible(true);
+        this.dialogueText.setText('Vamos al hospital. A continuar con la historia');
+        this.dialogueText.setVisible(true);
+
+        // Crear un botón de "Continuar"
+        const continueButton = this.add.text(300, 360, 'Continuar', {
+            fontFamily: 'Arial',
+            fontSize: 18,
+            color: '#ffffff',
+            backgroundColor: '#000000',
+            padding: { x: 10, y: 5 }
+        }).setInteractive();
+
+        continueButton.on('pointerdown', () => {
+            // Ocultar el diálogo y continuar
+            this.dialogueBox.setVisible(false);
+            this.dialogueText.setVisible(false);
+            this.dialogueCharacterRight.setVisible(true);
+            continueButton.destroy(); // Destruir el botón después de usarlo
+
+            // Emitir un evento de cambio de escena
+            this.scene.start('Consultorio')
+        });
     }
+
+    showGameNarrator(scene) {
+        this.instructionBox = this.add.graphics();
+        this.instructionBox.fillStyle(0x000000, 0.7); // Color negro con 70% de opacidad
+        this.instructionBox.fillRect(50, 30, 500, 80); // Cuadro de instrucciones en la parte superior
+
+        const dialogs = narratorDialogues.find(narrator => narrator.scene === scene);
+
+        this.instructionText = this.add.text(60, 30, dialogs.dialogues[0], {
+            fontFamily: 'Arial',
+            fontSize: 18,
+            color: '#ffffff',
+            wordWrap: { width: 480, useAdvancedWrap: true }
+        });
+
+        this.instructionBox.setVisible(true);
+        this.instructionText.setVisible(true);
+
+        // Mostrar cada diálogo con un retraso
+        let dialogueIndex = 0;
+        const showNextDialogue = () => {
+            dialogueIndex++;
+            if (dialogueIndex < dialogs.dialogues.length) {
+                this.instructionText.setText(dialogs.dialogues[dialogueIndex]);
+                this.time.delayedCall(3000, showNextDialogue);
+            } else {
+                // Ocultar el cuadro de narrador después de terminar
+                this.instructionBox.setVisible(false);
+                this.instructionText.setVisible(false);
+
+                // Iniciar el diálogo entre los personajes
+                this.showCharacterDialogues();
+            }
+        };
+
+        this.time.delayedCall(3000, showNextDialogue); // Mostrar el primer diálogo después de 3 segundos
+    }
+
+    showCharacterDialogues() {
+
+        this.characters.forEach(character => character.setVisible(false));
+    
+        // Selecciona los personajes para el diálogo
+        const character1 = this.characters[0].texture.key;
+        const character2 = this.characters[1].texture.key;
+    
+        // Encuentra los diálogos correspondientes a la escena actual y los actores
+        const dialogueData1 = dataDialogues.find(d => d.actor === character1);
+        const dialogueData2 = dataDialogues.find(d => d.actor === character2);
+    
+        if (!dialogueData1 || !dialogueData2) {
+            console.error(`No se encontraron diálogos para uno o ambos personajes.`);
+            this.endDialogue();
+            return;
+        }
+    
+        const sceneDialogues1 = dialogueData1.messagesOrDialogues.find(m => m.scene === this.currentScene);
+        const sceneDialogues2 = dialogueData2.messagesOrDialogues.find(m => m.scene === this.currentScene);
+    
+        if (!sceneDialogues1 || !sceneDialogues2) {
+            console.error(`No se encontraron diálogos para la escena "${this.currentScene}"`);
+            this.endDialogue();
+            return;
+        }
+    
+        // Prepara los diálogos
+        const dialogues1 = sceneDialogues1.dialogues;
+        const dialogues2 = sceneDialogues2.dialogues;
+    
+        this.dialogueCharacterLeft.setTexture(character1);
+        this.dialogueCharacterRight.setTexture(character2);
+    
+        this.dialogueBox.setVisible(true);
+        this.dialogueText.setVisible(true);
+        this.dialogueCharacterLeft.setVisible(true);
+        this.dialogueCharacterRight.setVisible(true);
+    
+        let index1 = 0;
+        let index2 = 0;
+        let isCharacter1Turn = true;
+    
+        const showNextDialogue = () => {
+            if (index1 < dialogues1.length || index2 < dialogues2.length) {
+                if (isCharacter1Turn && index1 < dialogues1.length) {
+                    this.dialogueText.setStyle({ align: 'left' }); // Justificado a la izquierda
+                    this.dialogueText.setText(dialogues1[index1]);
+                    index1++;
+                } else if (!isCharacter1Turn && index2 < dialogues2.length) {
+                    this.dialogueText.setStyle({ align: 'right' }); // Justificado a la derecha
+                    this.dialogueText.setText(dialogues2[index2]);
+                    index2++;
+                }
+                isCharacter1Turn = !isCharacter1Turn; // Alterna el turno
+    
+                this.time.delayedCall(3000, showNextDialogue);
+            } else {
+                this.endDialogue();
+            }
+        };
+    
+        showNextDialogue();
+    }
+    
 
 }

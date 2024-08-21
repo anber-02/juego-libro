@@ -4,6 +4,7 @@ import Phaser from 'phaser';
 import { Preloader } from './scenes/Preloader';
 import { CasaPrimerCiego } from './scenes/CasaPrimerCiego';
 import { City } from './scenes/City';
+import { Consultorio } from './scenes/Consultorio';
 
 // Find out more information about the Game Config at:
 // https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -25,6 +26,7 @@ const config = {
         Preloader,
         MainMenu,
         CasaPrimerCiego,
+        Consultorio,
         City
     ]
 };

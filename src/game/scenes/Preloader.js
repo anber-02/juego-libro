@@ -38,6 +38,9 @@ export class Preloader extends Scene {
         this.load.spritesheet(actors.primer_ciego.name, 'characters/man-black.png',{
                 frameWidth: 62, frameHeight: 61,
             })
+        this.load.spritesheet(actors.esposa_del_primer_ciego.name, 'characters/girl.png',{
+                frameWidth: 30, frameHeight: 30,
+            })
 
         // Cargando los assets
         this.load.spritesheet('people', 'characters/main.png', {
@@ -49,6 +52,7 @@ export class Preloader extends Scene {
 
         // background
         this.load.image('background-2', 'scenes/house-internal.png')
+        this.load.image('background-3', 'scenes/medical-house.jpg')
 
         // Music
         this.load.audio('inicio', 'music/inicio.mp3')
@@ -61,7 +65,8 @@ export class Preloader extends Scene {
         //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
         //  For example, you can define global animations here, so we can use them in other scenes.
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        this.scene.start('MainMenu');
+        // this.scene.start('MainMenu');
+        this.scene.start('CasaPrimerCiego');
 
     }
     
