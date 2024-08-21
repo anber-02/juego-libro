@@ -10,19 +10,19 @@ export class Preloader extends Scene {
     }
 
     init() {
-       // Cargar y centrar la imagen de fondo
-    centerBackground(this, 'background');
+        // Cargar y centrar la imagen de fondo
+        centerBackground(this, 'background');
 
-    // Crear un contorno para la barra de progreso (centrada en la pantalla)
-    this.add.rectangle(300, 380, 500, 32).setStrokeStyle(1, 0xffffff);
+        // Crear un contorno para la barra de progreso (centrada en la pantalla)
+        this.add.rectangle(300, 380, 500, 32).setStrokeStyle(1, 0xffffff);
 
-    // Crear la barra de progreso
-    const bar = this.add.rectangle(50, 380, 10, 28, 0xffffff);
+        // Crear la barra de progreso
+        const bar = this.add.rectangle(50, 380, 10, 28, 0xffffff);
 
-    // Actualizar la barra de progreso según el porcentaje de carga
-    this.load.on('progress', (progress) => {
-        bar.width = 10 + (480 * progress); // Ajustar el ancho de la barra según el progreso
-    });
+        // Actualizar la barra de progreso según el porcentaje de carga
+        this.load.on('progress', (progress) => {
+            bar.width = 10 + (480 * progress);
+        });
     }
 
     preload() {
@@ -42,6 +42,9 @@ export class Preloader extends Scene {
 
         // Objects
         this.load.image('car', 'objects/car.png')
+        this.load.spritesheet('play', 'objects/play.png',{
+            frameWidth: 288, frameHeight: 124
+        })
         // floor 
         this.load.image('floor', 'grounds/ground_2.png')
 

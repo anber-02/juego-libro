@@ -1,4 +1,4 @@
-export const centerBackground = (game, background) => {
+export const centerBackground = (game, background, { opacity } = { opacity: 0.8 }) => {
     // Calcular escala para ajustar la imagen de fondo
     const bg = game.add.image(0, 0, background);
     const scaleX = game.cameras.main.width / bg.width;
@@ -11,5 +11,5 @@ export const centerBackground = (game, background) => {
     // Ajustar la posición de la imagen para que esté centrada en la pantalla
     bg.x = game.cameras.main.width / 2;
     bg.y = game.cameras.main.height / 2;
-    bg.setAlpha(0.8);
+    bg.setAlpha(opacity);
 }

@@ -91,4 +91,9 @@ export class Consultorio extends Scene {
             .setGravity(0)
             .setCollideWorldBounds(true);
     }
+
+    goBackScene() {
+        this.scene.start('CasaPrimerCiego');
+    }
+
 }

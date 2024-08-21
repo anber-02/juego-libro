@@ -218,4 +218,10 @@ export class CasaPrimerCiego extends Scene {
     }
     
 
+    goBackScene() {
+        this.scene.start('City');
+    }
+
+
+
 }
